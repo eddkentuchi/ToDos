@@ -28,14 +28,17 @@ function App() {
     const todoText= todo.text.toLocaleLowerCase();
     return todoText.includes(searchText);
   });
-
+  const saveTodos = (newTodos) =>{
+    localStorage.setItem('TODOS_V1',JSON.stringify(newTodos));
+    setTodos(newTodos);
+  }
   const completeTodo = (text) =>{
     const newTodos = [...todos];
     const todoIndex = newTodos.findIndex(
       (todo) => todo.text === text
     );
     newTodos[todoIndex].completed=!newTodos[todoIndex].completed;
-    setTodos(newTodos);
+    saveTodos(newTodos);
   };
   const deleteTodo = (text) =>{
     const newTodos = [...todos];
@@ -43,7 +46,7 @@ function App() {
       (todo) => todo.text === text
     );
     newTodos.splice(todoIndex,1);
-    setTodos(newTodos);
+    saveTodos(newTodos);
   };
   const totalTodos=todos.length;
   console.log('Los usuarios buscan de: '+searchValue);
