@@ -11,10 +11,15 @@ import React from 'react';
 
 function App() {
   
-  const[todos,saveTodos]= useLocalStorage('TODOS_V1',[]);
+  const{
+    item:todos,
+    saveItem: saveTodos,
+    loading,
+    error
+  }= useLocalStorage('TODOS_V1',[]);
   const[searchValue,setSearchValue]=React.useState('');
   const completedTodos= todos.filter(todo=>!!todo.completed).length;
-
+  const totalTodos=todos.length;
   console.log('Log 1');
   React.useEffect(()=>  {console.log('Loooooooog 2')},[totalTodos]);
   console.log('Log 3');
@@ -41,7 +46,6 @@ function App() {
     newTodos.splice(todoIndex,1);
     saveTodos(newTodos);
   };
-  const totalTodos=todos.length;
   //console.log('Los usuarios buscan de: '+searchValue);
   return (
     <AppUI
@@ -52,6 +56,8 @@ function App() {
     serchTodos={serchTodos}
     completeTodo={completeTodo}
     deleteTodo={deleteTodo}
+    loading={loading}
+    error={error}
     />);
 }
 export default App;
