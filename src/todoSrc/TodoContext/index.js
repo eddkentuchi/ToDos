@@ -11,18 +11,15 @@ function TodoProvider({children}){
         error
     }= useLocalStorage('TODOS_V1',[]);
     const[searchValue,setSearchValue]=React.useState('');
+    const[openModal,setOpenModal]=React.useState(false);
     const completedTodos= todos.filter(todo=>!!todo.completed).length;
     const totalTodos=todos.length;
-    console.log('Log 1');
-    React.useEffect(()=>  {console.log('Loooooooog 2')},[totalTodos]);
-    console.log('Log 3');
     
     const serchTodos= todos.filter((todo)=>{
         const searchText= searchValue.toLocaleLowerCase();
         const todoText= todo.text.toLocaleLowerCase();
         return todoText.includes(searchText);
     });
-    
     const completeTodo = (text) =>{
         const newTodos = [...todos];
         const todoIndex = newTodos.findIndex(
@@ -31,6 +28,14 @@ function TodoProvider({children}){
         newTodos[todoIndex].completed=!newTodos[todoIndex].completed;
         saveTodos(newTodos);
     };
+    const addTodo = (text) =>{
+        const newTodos = [...todos];
+        newTodos.push({
+            text,
+            completed:false,
+        });
+        saveTodos(newTodos)
+    }
     const deleteTodo = (text) =>{
         const newTodos = [...todos];
         const todoIndex = newTodos.findIndex(
@@ -49,7 +54,11 @@ function TodoProvider({children}){
             completeTodo,
             deleteTodo,
             loading,
-            error}}>
+            error,
+            openModal,
+            setOpenModal,
+            addTodo
+            }}>
             {children}
         </TodoContext.Provider>
 //<TodoContext.Consumer></TodoContext.Consumer>

@@ -1,14 +1,18 @@
 import { CreateTodoButton } from './CreateTodoButton';
+import { TodosLoading } from './TodosLoading';
+import { TodoContext } from './TodoContext';
 import { TodoCounter } from './TodoCounter';
 import { TodoSearch } from './TodoSearch';
-import { TodoItem } from './TodoItem';
-import { TodoList } from './TodoList';
-import { TodosLoading } from './TodosLoading';
 import { TodosError } from './TodosError';
 import { EmptyTodos } from './EmptyTodos';
-import { TodoContext } from './TodoContext';
+import { TodoItem } from './TodoItem';
+import { TodoList } from './TodoList';
+import { TodoForm } from './TodoForm';
+import { Modal } from './Modal';
+import React from 'react';
 
-function AppUI({}){
+function AppUI(){
+    const{loading,error,serchTodos,searchValue,completeTodo,deleteTodo,openModal,} =React.useContext(TodoContext);
     return(<>
         <TodoCounter/>  
         {/*completed={completedTodos} total={totalTodos}/> */}
@@ -16,32 +20,28 @@ function AppUI({}){
         {/*searchValue= {searchValue}
         setSearchValue={setSearchValue}
         />*/}
-        <TodoContext.Consumer>
-            {({
-                serchTodos,
-                completeTodo,
-                deleteTodo,
-                loading,
-                error
-            })=>(
-                <TodoList>
-                {loading && <TodosLoading/>}
-                {error && <TodosError/>}
-                {(!loading && serchTodos.length ===0) && <EmptyTodos/>}
-                {serchTodos.map(todo =>(
-                    <TodoItem 
-                    key={todo.text} 
-                    name={todo.text}
-                    completed={todo.completed}
-                    onComplete={() => completeTodo(todo.text)}
-                    onDeleted={()=>deleteTodo(todo.text)}
-                    
-                    />
-                ))}
+        
+        <TodoList>
+        {loading && <TodosLoading/>}
+        {error && <TodosError/>}
+        {(!loading && serchTodos.length ===0 && searchValue==='') && <EmptyTodos/>}
+        {serchTodos.map(todo =>(
+            <TodoItem 
+            key={todo.text} 
+            name={todo.text}
+            completed={todo.completed}
+            onComplete={() => completeTodo(todo.text)}
+            onDeleted={()=>deleteTodo(todo.text)}
+            
+            />
+        ))}
                 </TodoList>
-            )}
-        </TodoContext.Consumer>
         <CreateTodoButton/>
+        {openModal &&(
+            <Modal>
+                <TodoForm/>
+            </Modal>
+        )}
     </>)
 }
 
